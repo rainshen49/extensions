@@ -1,9 +1,11 @@
 variable "project" {
   description = "target project for the Extension"
   type        = string
+  default = ""
 }
 
 variable "storage_bucket_object" {
+  description = "A Storage Bucket reference for the source of the function.  Defaults to the 'official' source"
   type = object({
     name = string
     bucket = string
@@ -55,4 +57,22 @@ variable "do_backfill" {
   description = "Should existing documents in the Firestore collection be translated as well?  If you've added new languages since a document was translated, this will fill those in as well."
   type        = string
   default     = false
+}
+
+
+variable "pipe" {
+  description = "Reference to a previous Extension with compatible single Firestore Collection field output"
+  type = object({
+    project           = string
+    location          = string
+    collection_path   = string
+    output_field_name = string
+
+  })
+  default = {
+    project           = ""
+    location          = ""
+    collection_path   = ""
+    output_field_name = ""
+  }
 }

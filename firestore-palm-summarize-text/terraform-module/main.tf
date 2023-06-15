@@ -1,3 +1,10 @@
+locals {
+  project = coalesce(var.pipe.project, var.project)
+  location = coalesce(var.pipe.location, var.location)
+  collection_path = coalesce(var.pipe.collection_path, var.collection_path)
+  input_field_name = coalesce(var.pipe.output_field_name, var.input_field_name)
+}
+
 # enable PaLM API
 resource "google_project_service" "summarize-ext" {
   provider           = google-beta
@@ -45,22 +52,22 @@ resource "google_cloudfunctions_function" "firestore_summarize" {
   description = "Firebase Cloud Functions for the Firestore Summarize Text Extension"
   entry_point = "generateSummary"
   environment_variables = {
-    "COLLECTION_NAME"   = var.collection_path
+    "COLLECTION_NAME"   = local.collection_path
     "DATABASE_INSTANCE" = ""
     "DATABASE_URL"      = ""
     "EXT_INSTANCE_ID"   = "firestore-palm-summarize-text"
     "FIREBASE_CONFIG" = jsonencode(
       {
         databaseURL   = ""
-        projectId     = var.project
+        projectId     = local.project
         storageBucket = var.storage_bucket_object.bucket
       }
     )
-    "GCLOUD_PROJECT"        = var.project
-    "TEXT_FIELD"            = var.input_field_name
-    "LOCATION"              = var.location
+    "GCLOUD_PROJECT"        = local.project
+    "TEXT_FIELD"            = local.input_field_name
+    "LOCATION"              = local.location
     "RESPONSE_FIELD"        = var.output_field_name
-    "PROJECT_ID"            = var.project
+    "PROJECT_ID"            = local.project
     "STORAGE_BUCKET"        = var.storage_bucket_object.bucket
     "TARGET_SUMMARY_LENGTH" = var.target_summary_length
   }
@@ -72,8 +79,8 @@ resource "google_cloudfunctions_function" "firestore_summarize" {
     "goog-firebase-ext"      = "firestore-palm-summarize-text"
     "goog-firebase-ext-iid"  = "firestore-palm-summarize-text"
   }
-  project               = var.project
-  region                = var.location
+  project               = local.project
+  region                = local.location
   runtime               = "nodejs16"
   service_account_email = google_service_account.firestore-summarize-text.email
 
@@ -83,7 +90,7 @@ resource "google_cloudfunctions_function" "firestore_summarize" {
 
   event_trigger {
     event_type = "providers/cloud.firestore/eventTypes/document.write"
-    resource   = "projects/${var.project}/databases/(default)/documents/${var.collection_path}/{messageId}"
+    resource   = "projects/${local.project}/databases/(default)/documents/${local.collection_path}/{messageId}"
   }
   depends_on = [google_project_service.summarize-ext, google_project_iam_member.summarize-text-account]
 }
