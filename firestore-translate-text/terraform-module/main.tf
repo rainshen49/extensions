@@ -53,7 +53,7 @@ resource "google_cloudfunctions_function" "firestore_translate" {
       {
         databaseURL   = ""
         projectId     = var.project
-        storageBucket = var.src_bucket
+        storageBucket = var.storage_bucket_object.bucket
       }
     )
     "GCLOUD_PROJECT"       = var.project
@@ -64,7 +64,7 @@ resource "google_cloudfunctions_function" "firestore_translate" {
     "OUTPUT_FIELD_NAME"    = var.output_field_name
 
     "PROJECT_ID"     = var.project
-    "STORAGE_BUCKET" = var.src_bucket
+    "STORAGE_BUCKET" = var.storage_bucket_object.bucket
   }
   ingress_settings = "ALLOW_INTERNAL_ONLY"
   labels = {
@@ -79,9 +79,9 @@ resource "google_cloudfunctions_function" "firestore_translate" {
   runtime               = "nodejs16"
   service_account_email = google_service_account.firestore-translate-text.email
 
-  source_archive_bucket = var.src_bucket
+  source_archive_bucket = var.storage_bucket_object.bucket
   #   source_archive_bucket = "firebase-mod-sources-prod"
-  source_archive_object = var.src_object
+  source_archive_object = var.storage_bucket_object.name
 
   event_trigger {
     event_type = "providers/cloud.firestore/eventTypes/document.write"
@@ -105,7 +105,7 @@ resource "google_cloudfunctions_function" "firestore_translate_backfill" {
       {
         databaseURL   = ""
         projectId     = var.project
-        storageBucket = var.src_bucket
+        storageBucket = var.storage_bucket_object.bucket
       }
     )
     "GCLOUD_PROJECT"       = var.project
@@ -116,7 +116,7 @@ resource "google_cloudfunctions_function" "firestore_translate_backfill" {
     "OUTPUT_FIELD_NAME"    = var.output_field_name
 
     "PROJECT_ID"     = var.project
-    "STORAGE_BUCKET" = var.src_bucket
+    "STORAGE_BUCKET" = var.storage_bucket_object.bucket
   }
   ingress_settings = "ALLOW_INTERNAL_ONLY"
   labels = {
@@ -131,9 +131,9 @@ resource "google_cloudfunctions_function" "firestore_translate_backfill" {
   runtime               = "nodejs16"
   service_account_email = google_service_account.firestore-translate-text.email
 
-  source_archive_bucket = var.src_bucket
+  source_archive_bucket = var.storage_bucket_object.bucket
   #   source_archive_bucket = "firebase-mod-sources-prod"
-  source_archive_object = var.src_object
+  source_archive_object = var.storage_bucket_object.name
 
   event_trigger {
     event_type = "providers/cloud.firestore/eventTypes/document.write"

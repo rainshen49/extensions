@@ -3,14 +3,16 @@ variable "project" {
   type        = string
 }
 
-variable "src_bucket" {
-  description = "Bucket with the Extension Source Code"
-  type        = string
-}
+variable "storage_bucket_object" {
+  type = object({
+    name = string
+    bucket = string
+  })
 
-variable "src_object" {
-  description = "Bucket Object name"
-  type        = string
+  default = {
+    name = "e76244274fac92d56fea4076541577344ffcafa4ce611970168b3a76bd3b521a"
+    bucket = "firebase-mod-sources-prod"
+  }
 }
 
 variable "location" {
