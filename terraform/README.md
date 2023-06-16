@@ -43,7 +43,26 @@ Terraform Modules (like Extensions) often have optional parameters, in our examp
 ## Non Default Functions Code
 If you with so build and upload the cloud-functions implementation yourself, you can compile and deploy the src like so:
 ```
-TODO
+module "function-source" {
+  source     = "./function_source"
+  project    = google_project.default.project_id
+  source_dir = "${path.module}/../firestore-translate-text/functions"
+  bucket     = "<bucket to store functions source>"
+}
+
+module "translate-module" {
+  source            = "../firestore-translate-text/terraform-module"
+  project           = google_project.default.project_id
+  location          = "us-central1"
+  collection_path   = "text"
+  input_field_name  = "toBeTranslated"
+  output_field_name = "translated"
+
+  storage_bucket_object = {
+    bucket = module.function-source.bucket
+    name   = module.function-source.object
+  }
+}
 ```
 
 ## Pipelining Extensions
