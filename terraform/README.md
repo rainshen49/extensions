@@ -3,8 +3,8 @@
 [Terraform Modules](https://developer.hashicorp.com/terraform/language/modules) offer a similar capability to Firebase Extensions.  Google already provides a variety of [Modules](https://registry.terraform.io/namespaces/terraform-google-modules), which are offered with significantly more polish than the proof-of-concept Modules provided here. 
 
 Current Proof Of Concept Extensions:
-  * firestore-palm-summarize-text
-  * firestore-translate-text
+  * [firestore-palm-summarize-text](../firestore-palm-summarize-text/terraform-module/)
+  * [firestore-translate-text](../firestore-translate-text/terraform-module/)
 
 ## Before you Begin
 If you are new to Terraform, you may want to go through the [Firebase Terraform Codelab](https://firebase.google.com/codelabs/firebase-terraform#0) to learn about the basics of using Terraform, and the resources available in Firebase.  
